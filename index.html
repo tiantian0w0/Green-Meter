@@ -56,10 +56,19 @@
         .app-container { 
             max-width: 600px; margin: 0 auto; position: relative; z-index: 2; 
             padding: 40px 20px 100px 20px; 
-            opacity: 0; transform: translateY(15px); 
-            transition: opacity 0.5s ease, transform 0.5s var(--ease-hyper);
+            opacity: 1; transform: translateY(0); filter: blur(0);
+            /* UPDATE: Increased transition time for reset effect */
+            transition: opacity 0.8s ease, transform 0.8s var(--ease-hyper), filter 0.8s ease;
         }
-        .app-container.loaded { opacity: 1; transform: translateY(0); }
+        
+        /* UPDATE: New Resetting State */
+        .app-container.resetting { 
+            opacity: 0; 
+            transform: scale(0.95) translateY(10px); 
+            filter: blur(20px); /* Strong blur effect */
+        }
+        
+        .app-container.loading { opacity: 0; transform: translateY(15px); }
 
         /* --- TYPOGRAPHY --- */
         h1 {
@@ -130,7 +139,6 @@
         
         .btn-copy { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px -5px rgba(16, 185, 129, 0.3); }
         .btn-copy:active { box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); }
-        
         .btn-reset { background: linear-gradient(135deg, #f43f5e, #e11d48); box-shadow: 0 8px 20px -5px rgba(244, 63, 94, 0.3); }
         .btn-reset:active { box-shadow: 0 0 30px rgba(244, 63, 94, 0.6); }
         
@@ -164,8 +172,7 @@
         #result-area.show { opacity: 1; transform: translateY(0); }
 
         .meter-container {
-            margin-top: 55px; /* Spaced for LIMIT text */
-            height: 36px; background: rgba(0,0,0,0.6);
+            margin-top: 55px; height: 36px; background: rgba(0,0,0,0.6);
             border-radius: 50px; padding: 6px; position: relative;
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1);
         }
@@ -355,12 +362,12 @@
                 <div class="expand-container" id="breakdownArea">
                     <div class="expand-inner">
                         <div class="breakdown-grid">
-                            <div class="breakdown-item"><span>🏍️</span> <b id="bd-moto">0.00</b></div>
-                            <div class="breakdown-item"><span>🚗</span> <b id="bd-car">0.00</b></div>
-                            <div class="breakdown-item"><span>❄️</span> <b id="bd-ac">0.00</b></div>
-                            <div class="breakdown-item"><span>🥩</span> <b id="bd-beef">0.00</b></div>
-                            <div class="breakdown-item"><span>🥤</span> <b id="bd-plastic">0.00</b></div>
-                            <div class="breakdown-item"><span>📦</span> <b id="bd-delivery">0.00</b></div>
+                            <div class="breakdown-item"><span>🏍️ Moto</span> <b id="bd-moto">0.00</b></div>
+                            <div class="breakdown-item"><span>🚗 Car</span> <b id="bd-car">0.00</b></div>
+                            <div class="breakdown-item"><span>❄️ AC</span> <b id="bd-ac">0.00</b></div>
+                            <div class="breakdown-item"><span>🥩 Beef</span> <b id="bd-beef">0.00</b></div>
+                            <div class="breakdown-item"><span>🥤 Plastic</span> <b id="bd-plastic">0.00</b></div>
+                            <div class="breakdown-item"><span>📦 Delivery</span> <b id="bd-delivery">0.00</b></div>
                         </div>
                     </div>
                 </div>
@@ -402,6 +409,7 @@
                 setTimeout(() => {
                     boot.style.display = 'none';
                     app.classList.add('loaded');
+                    // Initialize slider fills
                     document.querySelectorAll('input[type="range"]').forEach(el => updateSliderFill(el));
                 }, 500);
             }, 600); 
@@ -422,7 +430,6 @@
         }
 
         function fallbackCopy(text, btn) {
-            // Fallback for non-HTTPS contexts
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(() => showCopyFeedback(btn)).catch(() => manualCopy(text, btn));
             } else {
@@ -433,7 +440,7 @@
         function manualCopy(text, btn) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            textArea.style.position = "fixed"; // Avoid scrolling to bottom
+            textArea.style.position = "fixed"; 
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
@@ -441,7 +448,7 @@
                 document.execCommand('copy');
                 showCopyFeedback(btn);
             } catch (err) {
-                alert('Copy failed. Please manually copy the text.');
+                alert('Copy failed.');
             }
             document.body.removeChild(textArea);
         }
@@ -450,14 +457,12 @@
             const iconSpan = btn.querySelector('.icon');
             const originalHtml = btn.innerHTML;
             
-            // Create Success State
             if (iconSpan) {
                 btn.innerHTML = '<span class="icon" style="font-size:1.3em">✅</span> Copied!';
             } else {
                 btn.innerText = "✅ Copied!";
             }
             
-            // Green Feedback
             const originalBg = btn.style.background;
             const originalColor = btn.style.color;
             btn.style.background = 'var(--neon-green)';
@@ -602,29 +607,31 @@
             const mCard = document.getElementById('missionCard');
             let pct = Math.min((total / 30) * 100, 100);
             
-            // Force hard reset of class BEFORE timeout
+            // Force reset state
+            fill.style.width = '0%';
+            fill.style.background = '#00ff9d';
+            fill.style.boxShadow = '0 0 30px #00ff9d';
             mCard.className = 'mission-card'; 
 
             setTimeout(() => {
-                // IMPORTANT: Reset class AGAIN inside timeout to be safe
-                mCard.className = 'mission-card'; 
-                
                 let color = "#00ff9d";
                 let emoji = "🌟"; let title = "WEEKLY MISSION";
 
+                // UPDATED LOGIC FOR < 30
                 if(total <= 30) {
-                    color = "#00ff9d"; // GREEN
+                    color = "#00ff9d"; 
                     emoji = "🌿"; 
                     title = "PURE & CLEAN";
                     mCard.classList.add('level-safe');
+                    // Confetti only for Success
                     confetti.create(document.getElementById('confetti-canvas'), { resize: true })({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 } else if (total > 30 && total <= 50) {
-                    color = "#f59e0b"; // ORANGE
+                    color = "#f59e0b"; 
                     emoji = "⚠️"; 
                     title = "MODERATE EXCESS";
                     mCard.classList.add('level-warn');
                 } else {
-                    color = "#ff0055"; // RED
+                    color = "#ff0055"; 
                     emoji = "🚨"; 
                     title = "HIGH FOOTPRINT";
                     mCard.classList.add('level-crit');
@@ -637,7 +644,7 @@
                 document.getElementById('missionEmoji').innerText = emoji;
                 document.getElementById('missionTitle').innerText = title;
                 document.getElementById('missionTitle').style.color = color;
-            }, 50);
+            }, 100);
 
             animateValue('scoreVal', total);
 
@@ -670,21 +677,38 @@
             requestAnimationFrame(step);
         }
 
+        // --- NEW RESET FUNCTION WITH VISUAL EFFECTS ---
         function resetApp() {
             const app = document.querySelector('.app-container');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            app.style.opacity = '0';
+
+            // 1. Trigger Reset Animation (Blur + Fade)
+            app.classList.add('resetting');
+
             setTimeout(() => {
+                // 2. Reset Inputs
                 ['moto','car','ac','beef','plastic','delivery'].forEach(id => {
                     document.getElementById(id).value = 0;
                     const s = document.getElementById(id).parentElement.querySelector('input[type="range"]');
                     if(s) { s.value = 0; updateSliderFill(s); }
                 });
-                document.getElementById('result-area').style.display = 'none';
-                document.getElementById('result-area').classList.remove('show');
+
+                // 3. Hide & Clean Result Area
+                const res = document.getElementById('result-area');
+                res.style.display = 'none';
+                res.classList.remove('show');
                 document.getElementById('breakdownArea').classList.remove('open');
-                app.style.opacity = '1';
-            }, 400);
+
+                // 4. CLEAN OLD CLASSES (Crucial Step)
+                const mCard = document.getElementById('missionCard');
+                mCard.className = 'mission-card'; // Removes level-safe, level-warn, level-crit
+                
+                // Reset meter
+                document.getElementById('meterFill').style.width = '0%';
+
+                // 5. Restore View
+                app.classList.remove('resetting');
+            }, 800); // Wait for animation to finish
         }
     </script>
 </body>
