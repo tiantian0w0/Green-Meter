@@ -6,23 +6,21 @@
     <title>🌱 Green Meter 🌱</title>
     <style>
         :root {
-            /* Darker Glass for High Contrast */
-            --glass-bg: rgba(10, 12, 20, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --neon-green: #00ff9d;
             --neon-orange: #f59e0b;
             --neon-red: #ff0055;
             --neon-blue: #00d2ff;
-            --text-main: #ffffff; /* Pure White */
+            --text-main: #f8fafc;
             --ease-hyper: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0; padding: 0; min-height: 100vh; color: var(--text-main);
-            /* DEEP DARK VOID BACKGROUND */
-            background: radial-gradient(circle at 50% -20%, #0f172a, #020617 50%, #000000 100%);
-            background-attachment: fixed; overflow-x: hidden;
+            background: #0f172a;
+            overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none; user-select: none;
             scroll-behavior: smooth;
@@ -30,118 +28,116 @@
 
         button:focus, input:focus { outline: none; }
 
-        /* --- BG BLOBS (More subtle to respect the dark mode) --- */
+        /* --- BG BLOBS --- */
         .bg-blob {
-            position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.3;
+            position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.4;
             animation: floatBlob 15s infinite alternate ease-in-out;
+            /* GPU Acceleration Fix */
+            transform: translate3d(0,0,0);
         }
         .blob-1 { top: -10%; left: -10%; width: 60vh; height: 60vh; background: #00d2ff; }
         .blob-2 { bottom: -10%; right: -10%; width: 70vh; height: 70vh; background: #00ff9d; animation-delay: -5s; }
-        .blob-3 { top: 40%; left: 30%; width: 40vh; height: 40vh; background: #7c3aed; opacity: 0.2; }
+        .blob-3 { top: 40%; left: 30%; width: 40vh; height: 40vh; background: #7c3aed; opacity: 0.3; }
 
         /* --- BOOT SCREEN --- */
         #boot-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 99999;
+            background: #0f172a; z-index: 99999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s var(--ease-hyper), visibility 0.8s, filter 0.8s ease;
         }
         #boot-screen.off { opacity: 0; visibility: hidden; pointer-events: none; filter: blur(20px); }
         .boot-logo {
             font-size: 5em; animation: logoBreath 3s infinite ease-in-out;
-            filter: drop-shadow(0 0 30px rgba(0, 255, 157, 0.6));
+            filter: drop-shadow(0 0 30px rgba(0, 255, 157, 0.4));
         }
 
         /* --- APP CONTAINER --- */
-        .app-container {
-            max-width: 600px; margin: 0 auto; position: relative; z-index: 2;
-            padding: 40px 20px 80px 20px;
+        .app-container { 
+            max-width: 600px; margin: 0 auto; position: relative; z-index: 2; 
+            padding: 40px 20px 80px 20px; 
             opacity: 0; transform: scale(0.92); filter: blur(15px);
             transition: all 1s var(--ease-hyper);
+            /* Fix Flickering */
+            transform: translate3d(0,0,0);
         }
-        .app-container.loaded { opacity: 1; transform: scale(1); filter: blur(0); }
-        .app-container.resetting { opacity: 0; transform: scale(0.96); filter: blur(20px); transition: all 0.6s var(--ease-hyper); }
+        .app-container.loaded { opacity: 1; transform: scale(1) translate3d(0,0,0); filter: blur(0); }
+        .app-container.resetting { opacity: 0; transform: scale(0.96) translate3d(0,0,0); filter: blur(20px); transition: all 0.6s var(--ease-hyper); }
 
-        /* HEADER - BRIGHTER TEXT */
         h1 {
             text-align: center; font-weight: 900; margin-bottom: 5px; font-size: 2.6em;
-            background: linear-gradient(to right, #ffffff, #e2e8f0); /* Whiter Gradient */
+            background: linear-gradient(to right, #fff, #e2e8f0);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 25px rgba(0, 255, 157, 0.3));
+            filter: drop-shadow(0 0 20px rgba(0, 255, 157, 0.2));
         }
         h1::before {
             content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 120px; height: 120px; background: var(--neon-green); opacity: 0.1;
+            width: 120px; height: 120px; background: var(--neon-green); opacity: 0.15;
             filter: blur(60px); z-index: -1; animation: pulseGlow 4s infinite;
         }
-        /* Introduction Text - Lighter Grey */
-        p.intro {
-            text-align: center; color: #e2e8f0; font-size: 1em; margin-bottom: 25px; font-weight: 500;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+        p.intro { text-align: center; color: #cbd5e1; font-size: 1em; margin-bottom: 25px; font-weight: 500; }
 
-        /* --- GLASS CARD (High Contrast) --- */
+        /* --- GLASS CARD (FIXED) --- */
         .glass-card {
-            background: var(--glass-bg);
+            background: var(--glass-bg); 
             backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.15);
             border-radius: 32px; padding: 25px; margin-bottom: 15px;
-            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8); /* Deep shadow */
+            box-shadow: 0 20px 60px -15px rgba(0,0,0,0.5);
+            /* STABILITY FIXES FOR MOBILE */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translate3d(0,0,0);
         }
 
         /* --- SLIDERS --- */
         .input-group { margin-bottom: 22px; }
-
-        /* Labels - Pure White + Shadow */
-        label {
-            display: flex; justify-content: space-between; font-weight: 700; color: #ffffff;
-            margin-bottom: 12px; font-size: 0.95em; letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+        label { display: flex; justify-content: space-between; font-weight: 700; color: #fff; margin-bottom: 12px; font-size: 0.95em; }
         .input-row { display: flex; gap: 12px; align-items: center; }
-
+        
         input[type="range"] {
             flex-grow: 1; -webkit-appearance: none; height: 6px;
-            background: rgba(255,255,255,0.2); /* Brighter track */
-            border-radius: 10px; outline: none; cursor: pointer;
+            background: rgba(255,255,255,0.1); border-radius: 10px; outline: none; cursor: pointer;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; width: 26px; height: 26px;
-            background: #ffffff; border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255,255,255,0.5);
-            transition: transform 0.4s var(--ease-hyper);
+            background: #fff; border-radius: 50%; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.4s var(--ease-hyper); 
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-        input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.4); background: var(--neon-blue); box-shadow: 0 0 25px var(--neon-blue); }
+        input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.4); background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
 
         input[type="number"] {
-            width: 65px; padding: 12px 8px; border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 16px; background: rgba(0,0,0,0.4);
-            text-align: center; font-weight: 700; color: #ffffff; outline: none;
+            width: 65px; padding: 12px 8px; border: 1px solid var(--glass-border);
+            border-radius: 16px; background: rgba(0,0,0,0.3);
+            text-align: center; font-weight: 700; color: #fff; outline: none;
             transition: 0.3s; font-size: 1em;
         }
-        input[type="number"]:focus { border-color: var(--neon-blue); background: rgba(0,0,0,0.7); }
+        input[type="number"]:focus { border-color: var(--neon-blue); background: rgba(0,0,0,0.5); }
 
         #inputWarning {
             color: var(--neon-red); text-align: center; font-size: 0.9em; font-weight: bold;
             margin-bottom: 10px; height: 20px; opacity: 0; transition: opacity 0.3s;
         }
 
-        /* --- BUTTONS (More Pop) --- */
+        /* --- BUTTONS --- */
         .btn-modern {
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; 
             transition: all 0.4s var(--ease-hyper);
+            /* Stability Fix */
+            transform: translate3d(0,0,0);
         }
         .btn-modern::after {
             content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
             transform: skewX(-25deg); transition: 0s; pointer-events: none;
         }
         @media (hover: hover) {
             .btn-modern:hover::after { left: 150%; transition: 0.7s ease-in-out; }
-            .btn-modern:hover { transform: translateY(-2px); filter: brightness(1.2); }
+            .btn-modern:hover { transform: translateY(-2px); filter: brightness(1.1); }
         }
-        .btn-modern:active { transform: scale(0.94); filter: brightness(1.3); }
+        .btn-modern:active { transform: scale(0.94); filter: brightness(1.2); }
         .btn-modern:active::after { display: none; }
 
         .main-btn {
@@ -149,9 +145,9 @@
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             color: white; font-size: 1.2em; font-weight: 800; cursor: pointer;
             margin-top: 10px; letter-spacing: 2px; text-transform: uppercase;
-            z-index: 1; box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.6);
+            z-index: 1; box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.5);
         }
-        .main-btn:active { background: linear-gradient(135deg, #1d4ed8, #1e40af); box-shadow: 0 0 40px rgba(37, 99, 235, 0.5); }
+        .main-btn:active { background: linear-gradient(135deg, #1d4ed8, #1e40af); box-shadow: 0 0 30px rgba(37, 99, 235, 0.4); }
 
         .action-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
         .action-btn {
@@ -159,95 +155,107 @@
             color: #fff; font-weight: 700; cursor: pointer; font-size: 0.95em;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-copy { background: linear-gradient(135deg, #10b981, #047857); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); }
+        .btn-copy { background: linear-gradient(135deg, #10b981, #047857); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
         .btn-copy:active { background: #047857; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
-
-        .btn-reset { background: linear-gradient(135deg, #f43f5e, #be123c); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        
+        .btn-reset { background: linear-gradient(135deg, #f43f5e, #be123c); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); }
         .btn-reset:active { background: #9f1239; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
         .btn-reset:active .icon { transform: rotate(-180deg); transition: 0.4s var(--ease-hyper); }
 
         .expand-btn {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             width: 100%; font-size: 0.95em; font-weight: 700; cursor: pointer; padding: 16px;
-            color: #f1f5f9; display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #cbd5e1; display: flex; align-items: center; justify-content: center; gap: 8px;
             border-radius: 20px;
         }
         .expand-btn:hover { color: #fff; background: rgba(255,255,255,0.15); }
 
         /* --- RESULTS --- */
         #result-area {
-            display: none; opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px);
+            display: none; opacity: 0; 
+            /* Initial state is moved down */
+            transform: translateY(40px) scale(0.95); filter: blur(10px);
             transition: opacity 0.6s ease, transform 0.6s var(--ease-hyper), filter 0.6s ease;
+            will-change: opacity, transform, filter;
         }
+        /* Show state */
         #result-area.show { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 
         .meter-container {
             margin-top: 50px; height: 32px; background: rgba(255,255,255,0.1);
             border-radius: 50px; padding: 5px; position: relative;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.4);
         }
         .meter-liquid {
             height: 100%; width: 0%; border-radius: 40px;
-            background: var(--neon-green); box-shadow: 0 0 40px var(--neon-green);
-            transition: width 1.5s var(--ease-hyper), background 0.5s, box-shadow 0.5s;
+            background: var(--neon-green); box-shadow: 0 0 30px var(--neon-green);
+            transition: width 1.5s var(--ease-hyper), background 0.5s, box-shadow 0.5s; 
             position: relative;
         }
         .target-marker {
             position: absolute; right: 0; top: -32px;
-            font-size: 0.8em; color: #ffffff; font-weight: 800; letter-spacing: 0.5px;
+            font-size: 0.8em; color: rgba(255,255,255,0.9); font-weight: 800;
         }
 
         .score-display { text-align: center; margin: 30px 0; }
-        .score-val {
-            font-size: 4.5em; font-weight: 900; line-height: 1;
-            /* Bright White Gradient */
-            background: linear-gradient(to bottom, #ffffff, #e2e8f0);
+        .score-val { 
+            font-size: 4.5em; font-weight: 900; line-height: 1; 
+            background: linear-gradient(to bottom, #fff, #94a3b8);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
         }
-        /* Lighter Unit Text */
-        .score-unit { color: #cbd5e1; font-weight:600; font-size: 0.95em; margin-top: 5px; display: block;}
+        .score-unit { color:#94a3b8; font-weight:600; font-size: 0.95em; margin-top: 5px; display: block;}
 
+        /* --- MISSION CARD (FIXED FLICKER) --- */
         .mission-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 26px; padding: 30px; text-align: center;
-            position: relative; overflow: hidden; transition: all 0.5s ease;
+            position: relative; overflow: hidden; 
+            transition: all 0.6s var(--ease-hyper);
+            /* Fix Flicker */
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0,0,0);
         }
-        .mission-card.level-safe { border-color: var(--neon-green); box-shadow: 0 0 50px -10px rgba(0, 255, 157, 0.2); }
+        .mission-card.level-safe { border-color: var(--neon-green); box-shadow: 0 0 40px rgba(0, 255, 157, 0.15); }
+        
+        /* UPDATED WARNING PULSE (NO BORDER COLOR CHANGE) */
+        @keyframes pulse-warning { 
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); } 
+            50% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.5); } 
+        }
         .mission-card.level-warn { border-color: var(--neon-orange); animation: pulse-warning 2s infinite; }
+        
         .mission-card.level-crit { border-color: var(--neon-red); animation: shake-critical 0.6s ease-in-out; }
 
         #missionEmoji { font-size: 3.5em; display: block; margin-bottom: 10px; }
-        #missionTitle { font-size:0.9em; letter-spacing:2px; color:#e2e8f0; margin-bottom: 12px; font-weight:800;}
-        #missionText { font-size:1.3em; font-weight: 800; margin-bottom:25px; line-height: 1.5; color: #ffffff; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        #missionTitle { font-size:0.9em; letter-spacing:2px; color:#94a3b8; margin-bottom: 12px; font-weight:800;}
+        #missionText { font-size:1.3em; font-weight: 800; margin-bottom:25px; line-height: 1.5; color: #f1f5f9; }
 
         .tips-box {
             margin-top: 25px; padding: 20px;
             background: rgba(255,255,255,0.03); border-radius: 22px;
-            border: 1px dashed rgba(255,255,255,0.2); text-align: center;
+            border: 1px dashed rgba(255,255,255,0.15); text-align: center;
         }
         .tips-icon { font-size: 1.6em; margin-bottom: 8px; display: block; animation: float 3s infinite ease-in-out; }
-        /* Lighter Tips Text */
         .tips-text { font-size: 0.9em; color: #cbd5e1; font-style: italic; }
 
-        .expand-container { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
+        .expand-container { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s var(--ease-hyper); overflow: hidden; }
         .expand-container.open { grid-template-rows: 1fr; }
         .expand-inner { min-height: 0; }
-
-        .breakdown-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-            margin-top: 10px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 20px;
+        
+        .breakdown-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; 
+            margin-top: 10px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 20px;
         }
         .breakdown-item {
             display: flex; justify-content: space-between; padding: 10px 15px;
-            background: rgba(255,255,255,0.08); border-radius: 12px; font-size: 0.85em; color: #e2e8f0;
+            background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 0.85em; color: #cbd5e1;
         }
-        .breakdown-item b { color: #fff; font-weight: 800; }
+        .breakdown-item b { color: #fff; }
 
         /* --- MENU & POPUPS --- */
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(30px);
+            background: rgba(10, 15, 30, 0.98); backdrop-filter: blur(30px);
             z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: all 0.5s ease; padding: 20px; box-sizing: border-box;
         }
@@ -256,24 +264,12 @@
         .menu-overlay.active .menu-content { transform: translateY(0); }
 
         .sdg-card {
-            background: #0f172a; border: 1px solid rgba(255,255,255,0.15); border-radius: 24px;
-            padding: 30px; text-align: center; margin-bottom: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            padding: 30px; text-align: center; margin-bottom: 30px; box-shadow: 0 0 40px rgba(0, 255, 157, 0.1);
         }
-        .learn-more-link {
-            display: inline-block; text-decoration: none; color: #0f172a;
-            background: var(--neon-green); padding: 12px 25px; border-radius: 30px;
-            font-weight: 700; font-size: 0.9em; transition: 0.3s; margin-top: 15px;
-        }
-        .learn-more-link:active { filter: brightness(1.2); transform: scale(0.95); }
-
-        .close-menu {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            padding: 10px 30px; border-radius: 30px; color: #fff; cursor: pointer; transition: 0.3s; margin-top: 30px;
-        }
-        .close-menu:hover { background: #fff; color: #000; }
-        .close-menu:active { transform: scale(0.95); background: #fff; color: #000; }
-
-        /* --- LINK POPUP --- */
+        
+        /* --- POPUP LINK STYLES (SAFE MODE) --- */
         .overlay-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px);
@@ -286,13 +282,28 @@
         .link-display-box {
             background: rgba(0,0,0,0.5); border: 1px dashed rgba(255,255,255,0.3);
             padding: 15px; border-radius: 15px; color: var(--neon-green); font-family: monospace;
-            margin: 20px 0; word-break: break-all; font-size: 0.9em;
+            margin: 20px 0; word-break: break-all; font-size: 0.9em; user-select: text; /* Allow selecting text here */
+            -webkit-user-select: text;
         }
+
+        .learn-more-link {
+            display: inline-block; text-decoration: none; color: #0f172a;
+            background: var(--neon-green); padding: 12px 25px; border-radius: 30px;
+            font-weight: 700; font-size: 0.9em; transition: 0.3s; margin-top: 15px;
+        }
+        .learn-more-link:active { transform: scale(0.95); filter: brightness(0.9); }
+
+        .close-menu {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 30px; border-radius: 30px; color: #fff; cursor: pointer; transition: 0.3s; margin-top: 30px;
+        }
+        .close-menu:hover { background: #fff; color: #000; }
+        .close-menu:active { transform: scale(0.95); background: rgba(255,255,255,0.2); }
 
         .bottom-menu-area { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .about-btn {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px 30px; border-radius: 30px; color: #cbd5e1; font-weight: 700;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 30px; border-radius: 30px; color: #94a3b8; font-weight: 700;
             cursor: pointer; transition: 0.3s;
         }
         .about-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
@@ -301,7 +312,8 @@
         /* ANIMATIONS */
         @keyframes logoBreath { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes floatBlob { 0% { transform: translate(0,0); } 100% { transform: translate(20px, -20px); } }
-        @keyframes pulse-warning { 0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); } 50% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.5); border-color: #fff; } }
+        /* FIXED ANIMATION: No border color change */
+        @keyframes pulse-warning { 0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); } 50% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.5); } }
         @keyframes shake-critical { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         @keyframes pulseGlow { 0% { opacity: 0.1; filter: blur(50px); } 100% { opacity: 0.3; filter: blur(70px); } }
@@ -320,355 +332,359 @@
     </style>
 </head>
 <body>
-<div id="boot-screen"><div class="boot-logo">🌱</div></div>
+    <div id="boot-screen"><div class="boot-logo">🌱</div></div>
+    
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
 
-<div class="bg-blob blob-1"></div>
-<div class="bg-blob blob-2"></div>
-<div class="bg-blob blob-3"></div>
+    <canvas id="confetti-canvas"></canvas>
 
-<canvas id="confetti-canvas"></canvas>
-
-<div id="menuOverlay" class="menu-overlay">
-    <div class="menu-content">
-        <div class="sdg-card">
-            <div style="font-size:3.5em; margin-bottom:15px">🌍</div>
-            <h3 style="color:var(--neon-green); margin:0 0 15px 0; font-weight:900; font-size:1.4em;">SDG 13: Climate Action</h3>
-            <p style="color:#cbd5e1; line-height:1.6; margin-bottom:25px">
-                Take urgent action to combat climate change. Reducing personal carbon footprint is the first step towards a sustainable future.
-            </p>
-            <button class="learn-more-link btn-modern" onclick="toggleLinkPopup()" style="border:none; cursor:pointer;">Learn More →</button>
-        </div>
-        <div style="text-align:center; border-top:1px solid rgba(255,255,255,0.1); padding-top:30px">
-            <h4 style="color:var(--neon-blue); margin:0; font-weight:600">DTC 6 Group 1 Innovation Project</h4>
-        </div>
-        <div style="text-align:center">
-            <button class="close-menu btn-modern" onclick="toggleMenu()">Close</button>
+    <div id="menuOverlay" class="menu-overlay">
+        <div class="menu-content">
+            <div class="sdg-card">
+                <div style="font-size:3em; margin-bottom:10px">🌍</div>
+                <h3 style="color:var(--neon-green); margin:0 0 15px 0; font-weight:900">SDG 13: Climate Action</h3>
+                <p style="color:#cbd5e1; line-height:1.6; margin-bottom:25px">
+                    Take urgent action to combat climate change. Reducing personal carbon footprint is the first step towards a sustainable future.
+                </p>
+                <button class="learn-more-link btn-modern" onclick="toggleLinkPopup()" style="border:none; cursor:pointer;">Learn More →</button>
+            </div>
+            <div style="text-align:center; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px">
+                <h4 style="color:var(--neon-blue); margin:0; font-weight:600">DTC 6 Group 1 Innovation Project</h4>
+            </div>
+            <div style="text-align:center">
+                <button class="close-menu btn-modern" onclick="toggleMenu()">Close</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="linkOverlay" class="overlay-bg">
-    <div class="overlay-content menu-content">
-        <div class="sdg-card" style="padding: 30px;">
-            <h3 style="color: #fff; margin: 0 0 10px 0;">Visit SDG Website</h3>
-            <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px;">Copy link to view in browser:</p>
-
-            <div class="link-display-box" id="linkText">https://sdgs.un.org/goals</div>
-
-            <button class="learn-more-link btn-modern" onclick="copyLinkUrl(this)" style="width:100%; margin-top:0; border:none;">Copy Link</button>
-            <button class="close-menu btn-modern" onclick="toggleLinkPopup()" style="margin-top: 15px; width: 100%;">Close</button>
+    <div id="linkOverlay" class="overlay-bg">
+        <div class="overlay-content menu-content">
+            <div class="sdg-card" style="padding: 30px;">
+                <h3 style="color: #fff; margin: 0 0 10px 0;">Visit SDG Website</h3>
+                <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px;">Copy the link below to view in browser:</p>
+                
+                <div class="link-display-box" id="linkText">https://sdgs.un.org/goals</div>
+                
+                <button class="learn-more-link btn-modern" onclick="copyLinkUrl(this)" style="width:100%; margin-top:0; border:none;">Copy Link</button>
+                <button class="close-menu btn-modern" onclick="toggleLinkPopup()" style="margin-top: 15px; width: 100%;">Close</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="app-container">
-    <h1>🌱 Green Meter 🌱</h1>
-    <p class="intro">Weekly Sustainability Tracker</p>
+    <div class="app-container">
+        <h1>🌱 Green Meter 🌱</h1>
+        <p class="intro">Weekly Sustainability Tracker</p>
 
-    <div class="glass-card">
-        <div class="input-group">
-            <label><span>🏍️ Motorbike (km/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="400" value="0" oninput="sync('moto', this.value)">
-                <input type="number" id="moto" value="0" max="9999" oninput="syncS('moto', this)" onkeypress="return isNumber(event)">
+        <div class="glass-card">
+            <div class="input-group">
+                <label><span>🏍️ Motorbike (km/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="400" value="0" oninput="sync('moto', this.value)">
+                    <input type="number" id="moto" value="0" max="9999" oninput="syncS('moto', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label><span>🚗 Car/Taxi (km/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="400" value="0" oninput="sync('car', this.value)">
-                <input type="number" id="car" value="0" max="9999" oninput="syncS('car', this)" onkeypress="return isNumber(event)">
+            <div class="input-group">
+                <label><span>🚗 Car/Taxi (km/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="400" value="0" oninput="sync('car', this.value)">
+                    <input type="number" id="car" value="0" max="9999" oninput="syncS('car', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label><span>❄️ AC Usage (hours/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="168" value="0" oninput="sync('ac', this.value)">
-                <input type="number" id="ac" value="0" max="9999" oninput="syncS('ac', this)" onkeypress="return isNumber(event)">
+            <div class="input-group">
+                <label><span>❄️ AC Usage (hours/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="168" value="0" oninput="sync('ac', this.value)">
+                    <input type="number" id="ac" value="0" max="9999" oninput="syncS('ac', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label><span>🥩 Beef Meals (meals/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="21" value="0" oninput="sync('beef', this.value)">
-                <input type="number" id="beef" value="0" max="9999" oninput="syncS('beef', this)" onkeypress="return isNumber(event)">
+            <div class="input-group">
+                <label><span>🥩 Beef Meals (meals/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="21" value="0" oninput="sync('beef', this.value)">
+                    <input type="number" id="beef" value="0" max="9999" oninput="syncS('beef', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label><span>🥤 Plastic (items/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="70" value="0" oninput="sync('plastic', this.value)">
-                <input type="number" id="plastic" value="0" max="9999" oninput="syncS('plastic', this)" onkeypress="return isNumber(event)">
+            <div class="input-group">
+                <label><span>🥤 Plastic (items/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="70" value="0" oninput="sync('plastic', this.value)">
+                    <input type="number" id="plastic" value="0" max="9999" oninput="syncS('plastic', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <label><span>📦 Delivery (orders/week)</span></label>
-            <div class="input-row">
-                <input type="range" min="0" max="20" value="0" oninput="sync('delivery', this.value)">
-                <input type="number" id="delivery" value="0" max="9999" oninput="syncS('delivery', this)" onkeypress="return isNumber(event)">
+            <div class="input-group">
+                <label><span>📦 Delivery (orders/week)</span></label>
+                <div class="input-row">
+                    <input type="range" min="0" max="20" value="0" oninput="sync('delivery', this.value)">
+                    <input type="number" id="delivery" value="0" max="9999" oninput="syncS('delivery', this)" onkeypress="return isNumber(event)">
+                </div>
             </div>
+
+            <div id="inputWarning"></div>
+
+            <button class="main-btn btn-modern" onclick="analyze()">Analyze</button>
         </div>
 
-        <div id="inputWarning"></div>
+        <div id="result-area">
+            <div class="meter-container">
+                <div class="target-marker"><span>GOAL: 30kg</span></div>
+                <div class="meter-liquid" id="meterFill"></div>
+            </div>
 
-        <button class="main-btn btn-modern" onclick="analyze()">Analyze</button>
-    </div>
+            <div class="score-display">
+                <div class="score-val" id="scoreVal">0.00</div>
+                <div class="score-unit">kg CO<sub>2</sub> Produced This Week</div>
+            </div>
 
-    <div id="result-area">
-        <div class="meter-container">
-            <div class="target-marker"><span>GOAL: 30kg</span></div>
-            <div class="meter-liquid" id="meterFill"></div>
-        </div>
-
-        <div class="score-display">
-            <div class="score-val" id="scoreVal">0.00</div>
-            <div class="score-unit">kg CO<sub>2</sub> Produced This Week</div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <button class="expand-btn btn-modern" onclick="toggleSection('breakdownArea')">
-                <span>📊 View Breakdown</span>
-            </button>
-            <div class="expand-container" id="breakdownArea">
-                <div class="expand-inner">
-                    <div class="breakdown-grid">
-                        <div class="breakdown-item"><span>🏍️ Moto</span> <b id="bd-moto">0.00</b></div>
-                        <div class="breakdown-item"><span>🚗 Car</span> <b id="bd-car">0.00</b></div>
-                        <div class="breakdown-item"><span>❄️ AC</span> <b id="bd-ac">0.00</b></div>
-                        <div class="breakdown-item"><span>🥩 Beef</span> <b id="bd-beef">0.00</b></div>
-                        <div class="breakdown-item"><span>🥤 Plastic</span> <b id="bd-plastic">0.00</b></div>
-                        <div class="breakdown-item"><span>📦 Delivery</span> <b id="bd-delivery">0.00</b></div>
+            <div style="margin-bottom: 20px;">
+                <button class="expand-btn btn-modern" onclick="toggleSection('breakdownArea')">
+                    <span>📊 View Breakdown</span>
+                </button>
+                <div class="expand-container" id="breakdownArea">
+                    <div class="expand-inner">
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item"><span>🏍️ Moto</span> <b id="bd-moto">0.00</b></div>
+                            <div class="breakdown-item"><span>🚗 Car</span> <b id="bd-car">0.00</b></div>
+                            <div class="breakdown-item"><span>❄️ AC</span> <b id="bd-ac">0.00</b></div>
+                            <div class="breakdown-item"><span>🥩 Beef</span> <b id="bd-beef">0.00</b></div>
+                            <div class="breakdown-item"><span>🥤 Plastic</span> <b id="bd-plastic">0.00</b></div>
+                            <div class="breakdown-item"><span>📦 Delivery</span> <b id="bd-delivery">0.00</b></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="mission-card" id="missionCard">
-            <div id="missionEmoji">🌟</div>
-            <div id="missionTitle">WEEKLY MISSION</div>
-            <div id="missionText">Loading...</div>
+            <div class="mission-card" id="missionCard">
+                <div id="missionEmoji">🌟</div>
+                <div id="missionTitle">WEEKLY MISSION</div>
+                <div id="missionText">Loading...</div>
+                
+                <div class="action-row">
+                    <button class="action-btn btn-copy btn-modern" onclick="copyResult(this)">
+                        <span class="icon">📋</span> Copy
+                    </button>
+                    <button class="action-btn btn-reset btn-modern" onclick="resetApp()">
+                        <span class="icon">🔄</span> Reset
+                    </button>
+                </div>
+            </div>
 
-            <div class="action-row">
-                <button class="action-btn btn-copy btn-modern" onclick="copyResult(this)">
-                    <span class="icon">📋</span> Copy
-                </button>
-                <button class="action-btn btn-reset btn-modern" onclick="resetApp()">
-                    <span class="icon">🔄</span> Reset
-                </button>
+            <div class="tips-box" id="tipsBox">
+                <span class="tips-icon">💡</span>
+                <div class="tips-text" id="tipsText">Generating Eco Fact...</div>
             </div>
         </div>
 
-        <div class="tips-box" id="tipsBox">
-            <span class="tips-icon">💡</span>
-            <div class="tips-text" id="tipsText">Generating Eco Fact...</div>
+        <div class="bottom-menu-area">
+            <button class="about-btn btn-modern" onclick="toggleMenu()">About Project</button>
         </div>
     </div>
 
-    <div class="bottom-menu-area">
-        <button class="about-btn btn-modern" onclick="toggleMenu()">About Project</button>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
-    window.onload = function() {
-        setTimeout(() => {
-            const boot = document.getElementById('boot-screen');
-            const app = document.querySelector('.app-container');
-            boot.classList.add('off');
-            setTimeout(() => boot.style.display = 'none', 800);
-            app.classList.add('loaded');
-        }, 1000);
-    };
-
-    function toggleMenu() { document.getElementById('menuOverlay').classList.toggle('active'); }
-    function toggleLinkPopup() { document.getElementById('linkOverlay').classList.toggle('active'); }
-
-    function copyLinkUrl(btn) {
-        const url = document.getElementById('linkText').innerText;
-        navigator.clipboard.writeText(url);
-        const originalText = btn.innerText;
-        btn.innerText = "✅ Copied!";
-        btn.style.background = "#fff";
-        btn.style.color = "#000";
-        setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.background = "";
-            btn.style.color = "";
-        }, 2000);
-    }
-
-    function isNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
-        return true;
-    }
-
-    function sync(id, val) {
-        const num = document.getElementById(id);
-        num.value = val;
-        validate(num);
-    }
-    function syncS(id, el) {
-        validate(el);
-        const s = el.parentElement.querySelector('input[type="range"]');
-        if(s && el.value <= parseFloat(s.max)) s.value = el.value;
-        else if(s) s.value = s.max;
-    }
-    function validate(el) {
-        const warn = document.getElementById('inputWarning');
-        let val = parseInt(el.value);
-        if(isNaN(val)) val = 0;
-
-        if(val > 9999) {
-            el.value = 9999;
-            warn.innerText = "⚠️ Limit reached: Max value is 9999";
-            warn.style.opacity = '1';
-            setTimeout(() => warn.style.opacity = '0', 2000);
-        } else if(val < 0) {
-            el.value = 0;
-        }
-    }
-
-    function toggleSection(id) { document.getElementById(id).classList.toggle('open'); }
-
-    const missionDB = {
-        moto: ["🚶 Walk short trips (<1km) twice this week.", "🚌 Use the bus for 2 days this week."],
-        car: ["🚲 Cycle for errands this weekend.", "🚗 Carpool with colleagues/friends."],
-        ac: ["🌬️ Use fan-only for 3 nights.", "🌡️ Set AC to 26°C consistently."],
-        beef: ["🥦 Go meat-free for 2 days.", "🐔 Swap Beef for Chicken/Fish."],
-        plastic: ["🥤 Use a reusable bottle all week.", "👜 Refuse plastic bags everywhere."],
-        delivery: ["📦 Combine orders to save shipping.", "🍳 Cook at home instead of ordering."]
-    };
-
-    const factsDB = [
-        "Did you know? A leaky faucet can waste over 3,000 gallons of water per year.",
-        "Tip: Unplugging electronics when not in use can save up to 10% on your energy bill.",
-        "Did you know? Glass bottles can take 4,000 years to decompose in a landfill.",
-        "Tip: Eating one less burger a week is like taking your car off the road for 320 miles.",
-        "Did you know? 91% of plastic is not recycled. Reduce is better than Recycle!",
-        "Tip: LED lightbulbs use 75% less energy than incandescent bulbs."
-    ];
-
-    function analyze() {
-        const vals = {
-            moto: (parseFloat(document.getElementById('moto').value)||0)*0.09,
-            car: (parseFloat(document.getElementById('car').value)||0)*0.25,
-            ac: (parseFloat(document.getElementById('ac').value)||0)*0.45,
-            beef: (parseFloat(document.getElementById('beef').value)||0)*5.0,
-            plastic: (parseFloat(document.getElementById('plastic').value)||0)*0.08,
-            delivery: (parseFloat(document.getElementById('delivery').value)||0)*1.2
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        window.onload = function() {
+            setTimeout(() => {
+                const boot = document.getElementById('boot-screen');
+                const app = document.querySelector('.app-container');
+                boot.classList.add('off'); 
+                setTimeout(() => boot.style.display = 'none', 800);
+                app.classList.add('loaded');
+            }, 1000); 
         };
-        const total = Object.values(vals).reduce((a,b)=>a+b, 0);
 
-        const res = document.getElementById('result-area');
+        function toggleMenu() { document.getElementById('menuOverlay').classList.toggle('active'); }
+        function toggleLinkPopup() { document.getElementById('linkOverlay').classList.toggle('active'); }
 
-        if(res.style.display !== 'block') {
-            res.style.display = 'block';
-            setTimeout(() => res.classList.add('show'), 10);
-            setTimeout(()=> res.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+        function copyLinkUrl(btn) {
+            const url = document.getElementById('linkText').innerText;
+            navigator.clipboard.writeText(url);
+            const originalText = btn.innerText;
+            btn.innerText = "✅ Copied!";
+            btn.style.background = "#fff";
+            btn.style.color = "#000";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "";
+                btn.style.color = "";
+            }, 2000);
         }
 
-        document.getElementById('bd-moto').innerText = vals.moto.toFixed(2);
-        document.getElementById('bd-car').innerText = vals.car.toFixed(2);
-        document.getElementById('bd-ac').innerText = vals.ac.toFixed(2);
-        document.getElementById('bd-beef').innerText = vals.beef.toFixed(2);
-        document.getElementById('bd-plastic').innerText = vals.plastic.toFixed(2);
-        document.getElementById('bd-delivery').innerText = vals.delivery.toFixed(2);
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
+            return true;
+        }
 
-        const fill = document.getElementById('meterFill');
-        const mCard = document.getElementById('missionCard');
-
-        let pct = (total / 30) * 100;
-        if(pct > 100) pct = 100;
-
-        fill.style.width = pct + '%';
-        mCard.className = 'mission-card';
-
-        setTimeout(() => {
-            fill.style.width = pct + '%';
-
-            if(total <= 30) {
-                fill.style.background = "#00ff9d";
-                fill.style.boxShadow = "0 0 30px #00ff9d";
-                mCard.classList.add('level-safe');
-                document.getElementById('missionEmoji').innerText = "🌟";
-                document.getElementById('missionTitle').innerText = "WEEKLY MISSION";
-                document.getElementById('missionTitle').style.color = "#00ff9d";
-                var myCanvas = document.getElementById('confetti-canvas');
-                var myConfetti = confetti.create(myCanvas, { resize: true, useWorker: true });
-                myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
-            } else if (total <= 50) {
-                fill.style.background = "#f59e0b";
-                fill.style.boxShadow = "0 0 30px #f59e0b";
-                mCard.classList.add('level-warn');
-                document.getElementById('missionEmoji').innerText = "⚠️";
-                document.getElementById('missionTitle').innerText = "MODERATE EXCESS";
-                document.getElementById('missionTitle').style.color = "#f59e0b";
-            } else {
-                fill.style.background = "#ff0055";
-                fill.style.boxShadow = "0 0 30px #ff0055";
-                mCard.classList.add('level-crit');
-                document.getElementById('missionEmoji').innerText = "🚨";
-                document.getElementById('missionTitle').innerText = "HIGH CARBON FOOTPRINT";
-                document.getElementById('missionTitle').style.color = "#ff0055";
+        function sync(id, val) { 
+            const num = document.getElementById(id);
+            num.value = val;
+            validate(num);
+        }
+        function syncS(id, el) { 
+            validate(el);
+            const s = el.parentElement.querySelector('input[type="range"]'); 
+            if(s && el.value <= parseFloat(s.max)) s.value = el.value;
+            else if(s) s.value = s.max; 
+        }
+        function validate(el) {
+            const warn = document.getElementById('inputWarning');
+            let val = parseInt(el.value);
+            if(isNaN(val)) val = 0;
+            
+            if(val > 9999) {
+                el.value = 9999;
+                warn.innerText = "⚠️ Limit reached: Max value is 9999";
+                warn.style.opacity = '1';
+                setTimeout(() => warn.style.opacity = '0', 2000);
+            } else if(val < 0) {
+                el.value = 0;
             }
-        }, 100);
-
-        animateValue('scoreVal', total);
-
-        let maxKey = Object.keys(vals).reduce((a,b)=>vals[a]>vals[b]?a:b);
-        let msg = total <= 30 ? "You are a Weekly Climate Hero! Amazing job!" :
-                  (vals[maxKey]===0 ? "Start tracking habits!" : missionDB[maxKey][Math.floor(Math.random()*missionDB[maxKey].length)]);
-        document.getElementById('missionText').innerText = msg;
-        window.currentMission = msg;
-
-        const randomFact = factsDB[Math.floor(Math.random() * factsDB.length)];
-        document.getElementById('tipsText').innerText = randomFact;
-    }
-
-    function animateValue(id, end) {
-        const obj = document.getElementById(id);
-        let start = 0; const dur = 1500; const sTime = performance.now();
-        function step(now) {
-            const prog = Math.min((now - sTime)/dur, 1);
-            const ease = 1 - Math.pow(2, -10 * prog) * Math.sin((prog - 0.1) / 0.4 * (2 * Math.PI) / 2.5);
-            obj.innerText = (start + (end - start) * (prog === 1 ? 1 : ease)).toFixed(2);
-            if(prog < 1) requestAnimationFrame(step);
         }
-        requestAnimationFrame(step);
-    }
+        
+        function toggleSection(id) { document.getElementById(id).classList.toggle('open'); }
 
-    function copyResult(btn) {
-        const score = document.getElementById('scoreVal').innerText;
-        const txt = `🌱 Weekly Green Meter: ${score} kg CO2\n🎯 Mission: ${window.currentMission}\n#SDG13`;
-        navigator.clipboard.writeText(txt);
-        const icon = btn.querySelector('.icon');
-        const originalIcon = icon.innerText;
-        icon.innerText = "✅";
-        setTimeout(() => { icon.innerText = originalIcon; }, 2000);
-    }
+        const missionDB = {
+            moto: ["🚶 Walk short trips (<1km) twice this week.", "🚌 Use the bus for 2 days this week."],
+            car: ["🚲 Cycle for errands this weekend.", "🚗 Carpool with colleagues/friends."],
+            ac: ["🌬️ Use fan-only for 3 nights.", "🌡️ Set AC to 26°C consistently."],
+            beef: ["🥦 Go meat-free for 2 days.", "🐔 Swap Beef for Chicken/Fish."],
+            plastic: ["🥤 Use a reusable bottle all week.", "👜 Refuse plastic bags everywhere."],
+            delivery: ["📦 Combine orders to save shipping.", "🍳 Cook at home instead of ordering."]
+        };
 
-    function resetApp() {
-        const app = document.querySelector('.app-container');
+        const factsDB = [
+            "Did you know? A leaky faucet can waste over 3,000 gallons of water per year.",
+            "Tip: Unplugging electronics when not in use can save up to 10% on your energy bill.",
+            "Did you know? Glass bottles can take 4,000 years to decompose in a landfill.",
+            "Tip: Eating one less burger a week is like taking your car off the road for 320 miles.",
+            "Did you know? 91% of plastic is not recycled. Reduce is better than Recycle!",
+            "Tip: LED lightbulbs use 75% less energy than incandescent bulbs."
+        ];
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        app.classList.add('resetting');
+        function analyze() {
+            const vals = {
+                moto: (parseFloat(document.getElementById('moto').value)||0)*0.09,
+                car: (parseFloat(document.getElementById('car').value)||0)*0.25,
+                ac: (parseFloat(document.getElementById('ac').value)||0)*0.45,
+                beef: (parseFloat(document.getElementById('beef').value)||0)*5.0,
+                plastic: (parseFloat(document.getElementById('plastic').value)||0)*0.08,
+                delivery: (parseFloat(document.getElementById('delivery').value)||0)*1.2
+            };
+            const total = Object.values(vals).reduce((a,b)=>a+b, 0);
 
-        setTimeout(() => {
-            ['moto','car','ac','beef','plastic','delivery'].forEach(id => {
-                document.getElementById(id).value = 0;
-                const s = document.getElementById(id).parentElement.querySelector('input[type="range"]');
-                if(s) s.value = 0;
-            });
-            document.getElementById('result-area').style.display = 'none';
-            document.getElementById('result-area').classList.remove('show');
-            document.getElementById('breakdownArea').classList.remove('open');
+            const res = document.getElementById('result-area');
+            
+            if(res.style.display !== 'block') {
+                res.style.display = 'block';
+                setTimeout(() => res.classList.add('show'), 10);
+                setTimeout(()=> res.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+            }
 
-            app.classList.remove('resetting');
-        }, 600);
-    }
-</script>
+            document.getElementById('bd-moto').innerText = vals.moto.toFixed(2);
+            document.getElementById('bd-car').innerText = vals.car.toFixed(2);
+            document.getElementById('bd-ac').innerText = vals.ac.toFixed(2);
+            document.getElementById('bd-beef').innerText = vals.beef.toFixed(2);
+            document.getElementById('bd-plastic').innerText = vals.plastic.toFixed(2);
+            document.getElementById('bd-delivery').innerText = vals.delivery.toFixed(2);
+
+            const fill = document.getElementById('meterFill');
+            const mCard = document.getElementById('missionCard');
+            
+            let pct = (total / 30) * 100;
+            if(pct > 100) pct = 100;
+            
+            fill.style.width = pct + '%';
+            mCard.className = 'mission-card'; 
+
+            setTimeout(() => {
+                fill.style.width = pct + '%';
+                
+                if(total <= 30) {
+                    fill.style.background = "#00ff9d";
+                    fill.style.boxShadow = "0 0 30px #00ff9d";
+                    mCard.classList.add('level-safe');
+                    document.getElementById('missionEmoji').innerText = "🌟";
+                    document.getElementById('missionTitle').innerText = "WEEKLY MISSION";
+                    document.getElementById('missionTitle').style.color = "#00ff9d";
+                    var myCanvas = document.getElementById('confetti-canvas');
+                    var myConfetti = confetti.create(myCanvas, { resize: true, useWorker: true });
+                    myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
+                } else if (total <= 50) {
+                    fill.style.background = "#f59e0b";
+                    fill.style.boxShadow = "0 0 30px #f59e0b";
+                    mCard.classList.add('level-warn');
+                    document.getElementById('missionEmoji').innerText = "⚠️";
+                    document.getElementById('missionTitle').innerText = "MODERATE EXCESS";
+                    document.getElementById('missionTitle').style.color = "#f59e0b";
+                } else {
+                    fill.style.background = "#ff0055";
+                    fill.style.boxShadow = "0 0 30px #ff0055";
+                    mCard.classList.add('level-crit');
+                    document.getElementById('missionEmoji').innerText = "🚨";
+                    document.getElementById('missionTitle').innerText = "HIGH CARBON FOOTPRINT";
+                    document.getElementById('missionTitle').style.color = "#ff0055";
+                }
+            }, 100);
+
+            animateValue('scoreVal', total);
+
+            let maxKey = Object.keys(vals).reduce((a,b)=>vals[a]>vals[b]?a:b);
+            let msg = total <= 30 ? "You are a Weekly Climate Hero! Amazing job!" : 
+                      (vals[maxKey]===0 ? "Start tracking habits!" : missionDB[maxKey][Math.floor(Math.random()*missionDB[maxKey].length)]);
+            document.getElementById('missionText').innerText = msg;
+            window.currentMission = msg;
+
+            const randomFact = factsDB[Math.floor(Math.random() * factsDB.length)];
+            document.getElementById('tipsText').innerText = randomFact;
+        }
+
+        function animateValue(id, end) {
+            const obj = document.getElementById(id);
+            let start = 0; const dur = 1500; const sTime = performance.now();
+            function step(now) {
+                const prog = Math.min((now - sTime)/dur, 1);
+                const ease = 1 - Math.pow(2, -10 * prog) * Math.sin((prog - 0.1) / 0.4 * (2 * Math.PI) / 2.5); 
+                obj.innerText = (start + (end - start) * (prog === 1 ? 1 : ease)).toFixed(2);
+                if(prog < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function copyResult(btn) {
+            const score = document.getElementById('scoreVal').innerText;
+            const txt = `🌱 Weekly Green Meter: ${score} kg CO2\n🎯 Mission: ${window.currentMission}\n#SDG13`;
+            navigator.clipboard.writeText(txt);
+            const icon = btn.querySelector('.icon'); 
+            const originalIcon = icon.innerText;
+            icon.innerText = "✅"; 
+            setTimeout(() => { icon.innerText = originalIcon; }, 2000);
+        }
+
+        function resetApp() {
+            const app = document.querySelector('.app-container');
+            
+            // SCROLL TO TOP
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // BLUR & RESET
+            app.classList.add('resetting');
+
+            setTimeout(() => {
+                ['moto','car','ac','beef','plastic','delivery'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                    const s = document.getElementById(id).parentElement.querySelector('input[type="range"]');
+                    if(s) s.value = 0;
+                });
+                document.getElementById('result-area').style.display = 'none';
+                document.getElementById('result-area').classList.remove('show');
+                document.getElementById('breakdownArea').classList.remove('open');
+                
+                // FADE IN
+                app.classList.remove('resetting');
+            }, 500);
+        }
+    </script>
 </body>
 </html>
