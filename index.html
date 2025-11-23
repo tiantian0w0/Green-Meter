@@ -695,11 +695,24 @@
 
         function animateValue(id, end) {
             const obj = document.getElementById(id);
-            let start = 0; const dur = 1000; const sTime = performance.now();
+            let start = 0;
+            const dur = 1000;
+            const sTime = performance.now();
+
             function step(now) {
-                const prog = Math.min((now - sTime)/dur, 1);
-                obj.innerText = (start + (end - start) * (1 - Math.pow(2, -10 * prog))).toFixed(2);
-                if(prog < 1) requestAnimationFrame(step);
+                const timePassed = now - sTime;
+                let prog = timePassed / dur;
+
+                if (prog >= 1) {
+                    prog = 1;
+                    obj.innerText = end.toFixed(2); // FORCE EXACT END VALUE
+                } else {
+                    // Easing
+                    const ease = 1 - Math.pow(2, -10 * prog);
+                    const current = start + (end - start) * ease;
+                    obj.innerText = current.toFixed(2);
+                    requestAnimationFrame(step);
+                }
             }
             requestAnimationFrame(step);
         }
