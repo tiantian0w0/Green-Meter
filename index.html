@@ -57,15 +57,13 @@
             max-width: 600px; margin: 0 auto; position: relative; z-index: 2; 
             padding: 40px 20px 100px 20px; 
             opacity: 1; transform: translateY(0); filter: blur(0);
-            /* UPDATE: Increased transition time for reset effect */
             transition: opacity 0.8s ease, transform 0.8s var(--ease-hyper), filter 0.8s ease;
         }
         
-        /* UPDATE: New Resetting State */
         .app-container.resetting { 
             opacity: 0; 
             transform: scale(0.95) translateY(10px); 
-            filter: blur(20px); /* Strong blur effect */
+            filter: blur(20px); 
         }
         
         .app-container.loading { opacity: 0; transform: translateY(15px); }
@@ -167,9 +165,21 @@
         .bottom-menu-area { margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .about-btn { padding: 12px 30px; border-radius: 30px; font-size: 0.9em; }
 
-        /* --- RESULTS --- */
-        #result-area { display: none; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
-        #result-area.show { opacity: 1; transform: translateY(0); }
+        /* --- UPDATED RESULTS ANIMATION --- */
+        #result-area { 
+            display: none; 
+            opacity: 0; 
+            /* Initial state: Blurred and slightly pushed down */
+            filter: blur(20px); 
+            transform: translateY(40px); 
+            transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        #result-area.show { 
+            opacity: 1; 
+            /* Final state: Clear and in position */
+            filter: blur(0); 
+            transform: translateY(0); 
+        }
 
         .meter-container {
             margin-top: 55px; height: 36px; background: rgba(0,0,0,0.6);
@@ -341,7 +351,7 @@
 
             <div id="inputWarning"></div>
 
-            <button class="main-btn btn-modern" onclick="analyze()">Analyze Footprint</button>
+            <button class="main-btn btn-modern" onclick="analyze()">⚡ ANALYZE ⚡</button>
         </div>
 
         <div id="result-area">
@@ -362,12 +372,12 @@
                 <div class="expand-container" id="breakdownArea">
                     <div class="expand-inner">
                         <div class="breakdown-grid">
-                            <div class="breakdown-item"><span>🏍️ Moto</span> <b id="bd-moto">0.00</b></div>
-                            <div class="breakdown-item"><span>🚗 Car</span> <b id="bd-car">0.00</b></div>
-                            <div class="breakdown-item"><span>❄️ AC</span> <b id="bd-ac">0.00</b></div>
-                            <div class="breakdown-item"><span>🥩 Beef</span> <b id="bd-beef">0.00</b></div>
-                            <div class="breakdown-item"><span>🥤 Plastic</span> <b id="bd-plastic">0.00</b></div>
-                            <div class="breakdown-item"><span>📦 Delivery</span> <b id="bd-delivery">0.00</b></div>
+                            <div class="breakdown-item"><span>🏍️</span> <b id="bd-moto">0.00</b></div>
+                            <div class="breakdown-item"><span>🚗</span> <b id="bd-car">0.00</b></div>
+                            <div class="breakdown-item"><span>❄️</span> <b id="bd-ac">0.00</b></div>
+                            <div class="breakdown-item"><span>🥩</span> <b id="bd-beef">0.00</b></div>
+                            <div class="breakdown-item"><span>🥤</span> <b id="bd-plastic">0.00</b></div>
+                            <div class="breakdown-item"><span>📦</span> <b id="bd-delivery">0.00</b></div>
                         </div>
                     </div>
                 </div>
@@ -591,14 +601,26 @@
             const total = Object.values(vals).reduce((a,b)=>a+b, 0);
 
             const res = document.getElementById('result-area');
-            if(window.getComputedStyle(res).display === 'none') {
-                res.style.display = 'block';
-                setTimeout(() => {
-                    res.classList.add('show');
-                    res.scrollIntoView({behavior:'smooth', block:'start'});
-                }, 10);
-            }
+            
+            // --- ANIMATION LOGIC START ---
+            // 1. Reset state in case it was already open
+            res.classList.remove('show');
+            res.style.display = 'none';
+            
+            // 2. Force render, then make block visible but BLURRED (opacity 0)
+            void res.offsetWidth; 
+            res.style.display = 'block';
 
+            // 3. Trigger Scroll IMMEDIATELY
+            res.scrollIntoView({behavior:'smooth', block:'start'});
+
+            // 4. Wait 100ms for scroll to start, then Un-Blur
+            setTimeout(() => {
+                res.classList.add('show');
+            }, 100);
+            // --- ANIMATION LOGIC END ---
+
+            // Update Breakdown Text
             ['moto','car','ac','beef','plastic','delivery'].forEach(k => {
                 document.getElementById('bd-'+k).innerText = vals[k].toFixed(2);
             });
@@ -607,24 +629,28 @@
             const mCard = document.getElementById('missionCard');
             let pct = Math.min((total / 30) * 100, 100);
             
-            // Force reset state
+            // Reset Visuals
             fill.style.width = '0%';
-            fill.style.background = '#00ff9d';
-            fill.style.boxShadow = '0 0 30px #00ff9d';
-            mCard.className = 'mission-card'; 
+            fill.style.background = '#00ff9d'; 
+            fill.style.boxShadow = 'none';
+            mCard.className = 'mission-card';
 
+            // Delayed Update for mobile performance
             setTimeout(() => {
                 let color = "#00ff9d";
-                let emoji = "🌟"; let title = "WEEKLY MISSION";
+                let emoji = "🌟"; 
+                let title = "WEEKLY MISSION";
 
-                // UPDATED LOGIC FOR < 30
                 if(total <= 30) {
                     color = "#00ff9d"; 
                     emoji = "🌿"; 
                     title = "PURE & CLEAN";
                     mCard.classList.add('level-safe');
-                    // Confetti only for Success
-                    confetti.create(document.getElementById('confetti-canvas'), { resize: true })({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    try {
+                        if (typeof confetti === 'function') {
+                            confetti.create(document.getElementById('confetti-canvas'), { resize: true })({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        }
+                    } catch (e) { console.log("Confetti skipped"); }
                 } else if (total > 30 && total <= 50) {
                     color = "#f59e0b"; 
                     emoji = "⚠️"; 
@@ -644,10 +670,11 @@
                 document.getElementById('missionEmoji').innerText = emoji;
                 document.getElementById('missionTitle').innerText = title;
                 document.getElementById('missionTitle').style.color = color;
-            }, 100);
+            }, 350); 
 
             animateValue('scoreVal', total);
 
+            // Mission Logic
             let maxKey = Object.keys(vals).reduce((a,b)=>vals[a]>vals[b]?a:b);
             let msg = "";
             
@@ -677,38 +704,33 @@
             requestAnimationFrame(step);
         }
 
-        // --- NEW RESET FUNCTION WITH VISUAL EFFECTS ---
         function resetApp() {
             const app = document.querySelector('.app-container');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // 1. Trigger Reset Animation (Blur + Fade)
             app.classList.add('resetting');
-
             setTimeout(() => {
-                // 2. Reset Inputs
                 ['moto','car','ac','beef','plastic','delivery'].forEach(id => {
                     document.getElementById(id).value = 0;
                     const s = document.getElementById(id).parentElement.querySelector('input[type="range"]');
                     if(s) { s.value = 0; updateSliderFill(s); }
                 });
-
-                // 3. Hide & Clean Result Area
                 const res = document.getElementById('result-area');
                 res.style.display = 'none';
                 res.classList.remove('show');
                 document.getElementById('breakdownArea').classList.remove('open');
-
-                // 4. CLEAN OLD CLASSES (Crucial Step)
                 const mCard = document.getElementById('missionCard');
-                mCard.className = 'mission-card'; // Removes level-safe, level-warn, level-crit
-                
-                // Reset meter
-                document.getElementById('meterFill').style.width = '0%';
-
-                // 5. Restore View
+                mCard.className = 'mission-card'; 
+                document.getElementById('missionEmoji').innerText = "🌟";
+                document.getElementById('missionTitle').innerText = "WEEKLY MISSION";
+                document.getElementById('missionTitle').style.color = ""; 
+                document.getElementById('missionText').innerText = "Loading...";
+                document.getElementById('scoreVal').innerText = "0.00";
+                const fill = document.getElementById('meterFill');
+                fill.style.width = '0%';
+                fill.style.background = '#00ff9d';
+                fill.style.boxShadow = 'none';
                 app.classList.remove('resetting');
-            }, 800); // Wait for animation to finish
+            }, 800); 
         }
     </script>
 </body>
