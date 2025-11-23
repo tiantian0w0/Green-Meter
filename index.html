@@ -7,7 +7,7 @@
     <title>🌱 Green Meter 🌱</title>
     <style>
         :root {
-            --glass-bg: rgba(15, 23, 42, 0.90);
+            --glass-bg: rgba(15, 23, 42, 0.95);
             --glass-border: rgba(255, 255, 255, 0.1);
             --neon-green: #00ff9d;
             --neon-orange: #f59e0b;
@@ -83,15 +83,9 @@
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
         }
 
-        /* --- SLIDERS (UPDATED for Smoothness & Lock) --- */
+        /* --- SLIDERS --- */
         .input-group { margin-bottom: 26px; }
-        
-        label { 
-            display: flex; justify-content: space-between; align-items: center;
-            font-weight: 800; color: #fff; margin-bottom: 14px; font-size: 1em; 
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
-        }
-        label span { display: flex; align-items: center; gap: 8px; }
+        label { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: #fff; margin-bottom: 14px; font-size: 1em; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
         .input-row { display: flex; gap: 16px; align-items: center; }
         
         input[type="range"] {
@@ -99,29 +93,19 @@
             background: linear-gradient(to right, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.05) 100%);
             border-radius: 20px; outline: none; border: none;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); padding: 0;
-            
-            /* KEY FIX: Lock vertical scroll when touching the slider */
             touch-action: pan-x; 
         }
-
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; width: 28px; height: 28px;
             background: #fff; border-radius: 50%; 
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 4px 10px rgba(0,0,0,0.5);
-            
-            /* KEY FIX: No transition on move -> Instant response */
-            transition: none; 
-            
-            cursor: pointer; position: relative; z-index: 2;
+            transition: none; cursor: pointer; position: relative; z-index: 2;
         }
-        
         input[type="range"]:active::-webkit-slider-thumb { 
             transform: scale(1.25); background: #fff;
             box-shadow: 0 0 25px var(--neon-green), 0 0 10px #fff; 
-            /* Only animate the scale effect */
             transition: transform 0.1s; 
         }
-
         input[type="number"] {
             width: 75px; padding: 12px 0; border: 1px solid var(--glass-border);
             border-radius: 16px; background: rgba(0,0,0,0.4);
@@ -129,63 +113,48 @@
             transition: all 0.3s; font-size: 1.1em;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
         }
-        input[type="number"]:focus { 
-            border-color: var(--neon-green); 
-            background: rgba(0, 255, 157, 0.05); 
-            box-shadow: 0 0 15px rgba(0, 255, 157, 0.1);
-        }
-        
-        #inputWarning {
-            color: var(--neon-red); text-align: center; font-size: 0.85em; font-weight: 800;
-            margin-bottom: 15px; height: 18px; opacity: 0; transition: opacity 0.3s;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
-        }
+        input[type="number"]:focus { border-color: var(--neon-green); background: rgba(0, 255, 157, 0.05); box-shadow: 0 0 15px rgba(0, 255, 157, 0.1); }
+        #inputWarning { color: var(--neon-red); text-align: center; font-size: 0.85em; font-weight: 800; margin-bottom: 15px; height: 18px; opacity: 0; transition: opacity 0.3s; text-shadow: 0 0 10px rgba(255, 0, 85, 0.6); }
 
         /* --- BUTTONS --- */
-        .btn-modern {
-            position: relative; overflow: hidden; transform: translate3d(0,0,0);
-            transition: transform 0.1s, box-shadow 0.2s, filter 0.2s;
-            cursor: pointer; user-select: none; font-family: inherit;
-        }
+        .btn-modern { position: relative; overflow: hidden; transform: translate3d(0,0,0); transition: transform 0.1s, box-shadow 0.2s, filter 0.2s; cursor: pointer; user-select: none; font-family: inherit; }
         .btn-modern:active { transform: scale(0.96); filter: brightness(1.15); }
-
+        
         .main-btn {
             width: 100%; padding: 20px; border: none; border-radius: 24px;
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             color: white; font-size: 1.15em; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;
-            box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.5);
-            border-top: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.5); border-top: 1px solid rgba(255,255,255,0.2);
         }
         .main-btn:active { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
-
+        
         .btn-copy { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px -5px rgba(16, 185, 129, 0.3); }
         .btn-copy:active { box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); }
         
         .btn-reset { background: linear-gradient(135deg, #f43f5e, #e11d48); box-shadow: 0 8px 20px -5px rgba(244, 63, 94, 0.3); }
         .btn-reset:active { box-shadow: 0 0 30px rgba(244, 63, 94, 0.6); }
-
-        .expand-btn, .about-btn, .close-menu {
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
-            color: #fff; font-weight: 700;
+        
+        .expand-btn, .about-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-weight: 700; }
+        .expand-btn:active, .about-btn:active { background: rgba(255,255,255,0.15); box-shadow: 0 0 25px rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
+        
+        .learn-more-link, .close-menu { 
+            border-radius: 99px; font-weight: 800; font-size: 1em; 
+            text-align: center; display: inline-block;
         }
-        .expand-btn:active, .about-btn:active, .close-menu:active {
-            background: rgba(255,255,255,0.15);
-            box-shadow: 0 0 25px rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.4);
-        }
-
-        .learn-more-link {
-            background: var(--neon-green); color: #020617; border: none;
-            box-shadow: 0 5px 25px rgba(0, 255, 157, 0.3);
+        .learn-more-link { 
+            background: var(--neon-green); color: #020617; border: none; 
+            box-shadow: 0 5px 25px rgba(0, 255, 157, 0.3); 
+            padding: 16px 30px; width: 100%; text-decoration: none;
         }
         .learn-more-link:active { box-shadow: 0 0 35px rgba(0, 255, 157, 0.8); }
+        .close-menu { 
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); 
+            color: #fff; width: 60%; padding: 14px; margin-top: 15px; 
+        }
+        .close-menu:active { background: rgba(255,255,255,0.2); }
 
         .action-row { display: flex; gap: 12px; margin-top: 20px; }
-        .action-btn {
-            flex: 1; padding: 16px; border-radius: 20px; border: none; color: #fff;
-            display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800;
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
+        .action-btn { flex: 1; padding: 16px; border-radius: 20px; border: none; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; border-top: 1px solid rgba(255,255,255,0.15); }
         .expand-btn { width: 100%; padding: 16px; border-radius: 20px; gap: 8px; display: flex; justify-content: center; align-items: center; }
         .bottom-menu-area { margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .about-btn { padding: 12px 30px; border-radius: 30px; font-size: 0.9em; }
@@ -195,7 +164,8 @@
         #result-area.show { opacity: 1; transform: translateY(0); }
 
         .meter-container {
-            margin-top: 40px; height: 36px; background: rgba(0,0,0,0.6);
+            margin-top: 55px; /* Spaced for LIMIT text */
+            height: 36px; background: rgba(0,0,0,0.6);
             border-radius: 50px; padding: 6px; position: relative;
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1);
         }
@@ -204,19 +174,28 @@
             background: var(--neon-green); box-shadow: 0 0 35px var(--neon-green);
             transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s, box-shadow 0.3s;
         }
-        .target-marker { position: absolute; right: 0; top: -30px; font-size: 0.85em; color: #fff; font-weight: 800; text-shadow: 0 2px 4px #000; }
+        .target-marker { 
+            position: absolute; 
+            left: 50%; transform: translateX(-50%); /* Centered */
+            top: -40px; 
+            font-size: 0.9em; color: #fff; font-weight: 900; letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            white-space: nowrap;
+        }
 
-        .score-display { text-align: center; margin: 35px 0; }
+        .score-display { text-align: center; margin: 30px 0; }
         .score-val { font-size: 4.8em; font-weight: 900; line-height: 1; color: #fff; text-shadow: 0 0 40px rgba(0,0,0,0.3); }
         .score-unit { color: var(--text-muted); font-weight:600; font-size: 1em; margin-top: 5px; opacity: 0.9; }
 
         /* --- MISSION CARD --- */
         .mission-card {
-            background: rgba(30, 41, 59, 0.7); border: 2px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.8); border: 2px solid rgba(255, 255, 255, 0.05);
             border-radius: 28px; padding: 25px; text-align: center;
             transition: border-color 0.4s, box-shadow 0.4s;
+            margin-top: 20px; 
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
         }
-        .mission-card.level-safe { border-color: var(--neon-green); box-shadow: 0 0 50px rgba(0, 255, 157, 0.1); }
+        .mission-card.level-safe { border-color: var(--neon-green); box-shadow: 0 0 50px rgba(0, 255, 157, 0.15); }
         .mission-card.level-warn { border-color: var(--neon-orange); animation: pulse-warn 2s infinite; }
         .mission-card.level-crit { border-color: var(--neon-red); animation: shake 0.5s ease-in-out; }
 
@@ -240,10 +219,8 @@
 
         .menu-overlay, .overlay-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.8); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 9000; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px;
         }
         .menu-overlay.active, .overlay-bg.active { opacity: 1; pointer-events: auto; }
@@ -251,20 +228,13 @@
         .menu-content { 
             width: 100%; max-width: 450px; transform: scale(0.95); opacity: 0; 
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px;
-            padding: 30px;
+            background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 30px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         .menu-overlay.active .menu-content, .overlay-bg.active .menu-content { transform: scale(1); opacity: 1; }
-
         .sdg-card { background: transparent; border: none; padding: 0; text-align: center; margin-bottom: 25px; box-shadow: none; }
         .link-display-box { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 12px; color: var(--neon-green); margin: 20px 0; word-break: break-all; font-family: monospace; user-select: text; -webkit-user-select: text; border: 1px dashed rgba(255,255,255,0.3); font-weight: bold; }
-        
-        .close-menu { width: 60%; padding: 14px; border-radius: 30px; font-size: 1em; margin-top: 15px; }
-        .learn-more-link { display: inline-block; padding: 16px 30px; border-radius: 30px; font-weight: 800; font-size: 1em; text-decoration: none; width: 100%; }
 
         @keyframes logoBreath { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes floatBlob { 0% { transform: translate(0,0); } 100% { transform: translate(40px, -40px); } }
@@ -291,16 +261,7 @@
             </div>
             
             <div style="text-align: center; margin-bottom: 25px;">
-                <h4 style="
-                    color: rgba(255, 255, 255, 0.5); 
-                    margin: 0; 
-                    font-weight: 600; 
-                    font-size: 0.85em; 
-                    letter-spacing: 1px; 
-                    white-space: nowrap; 
-                    overflow: hidden; 
-                    text-overflow: ellipsis;
-                ">
+                <h4 style="color: rgba(255, 255, 255, 0.5); margin: 0; font-weight: 600; font-size: 0.85em; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     DTC 6 Group 1 Innovation Project
                 </h4>
             </div>
@@ -316,9 +277,7 @@
             <div class="sdg-card">
                 <h3 style="color: #fff; margin: 0 0 10px 0;">SDG Website</h3>
                 <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 10px;">Copy the link below:</p>
-                
                 <div class="link-display-box" id="linkText">https://sdgs.un.org/goals</div>
-                
                 <button class="learn-more-link btn-modern" onclick="copyLinkUrl(this)" style="margin-top:0;">Copy Link</button>
                 <button class="close-menu btn-modern" onclick="toggleLinkPopup()" style="margin-top: 15px; width:100%">Close</button>
             </div>
@@ -379,27 +338,27 @@
         </div>
 
         <div id="result-area">
-            <div class="meter-container">
-                <div class="target-marker"><span>GOAL: 30kg</span></div>
-                <div class="meter-liquid" id="meterFill"></div>
-            </div>
+            <div class="glass-card" style="padding-top: 20px;">
+                <div class="meter-container">
+                    <div class="target-marker"><span>LIMIT: 30kg</span></div>
+                    <div class="meter-liquid" id="meterFill"></div>
+                </div>
 
-            <div class="score-display">
-                <div class="score-val" id="scoreVal">0.00</div>
-                <div class="score-unit">kg CO<sub>2</sub> Produced This Week</div>
-            </div>
+                <div class="score-display">
+                    <div class="score-val" id="scoreVal">0.00</div>
+                    <div class="score-unit">kg CO<sub>2</sub> Produced This Week</div>
+                </div>
 
-            <div style="margin-bottom: 25px;">
                 <button class="expand-btn btn-modern" onclick="toggleSection('breakdownArea')">
                     <span>📊 View Breakdown</span>
                 </button>
                 <div class="expand-container" id="breakdownArea">
                     <div class="expand-inner">
                         <div class="breakdown-grid">
-                            <div class="breakdown-item"><span>🏍️ Moto</span> <b id="bd-moto">0.00</b></div>
-                            <div class="breakdown-item"><span>🚗 Car</span> <b id="bd-car">0.00</b></div>
-                            <div class="breakdown-item"><span>❄️ AC</span> <b id="bd-ac">0.00</b></div>
-                            <div class="breakdown-item"><span>🥩 Beef</span> <b id="bd-beef">0.00</b></div>
+                            <div class="breakdown-item"><span>🏍️ Motobike</span> <b id="bd-moto">0.00</b></div>
+                            <div class="breakdown-item"><span>🚗 Car/Taxi</span> <b id="bd-car">0.00</b></div>
+                            <div class="breakdown-item"><span>❄️ AC Usage</span> <b id="bd-ac">0.00</b></div>
+                            <div class="breakdown-item"><span>🥩 Beef Meals</span> <b id="bd-beef">0.00</b></div>
                             <div class="breakdown-item"><span>🥤 Plastic</span> <b id="bd-plastic">0.00</b></div>
                             <div class="breakdown-item"><span>📦 Delivery</span> <b id="bd-delivery">0.00</b></div>
                         </div>
@@ -443,7 +402,6 @@
                 setTimeout(() => {
                     boot.style.display = 'none';
                     app.classList.add('loaded');
-                    // Initialize slider fills
                     document.querySelectorAll('input[type="range"]').forEach(el => updateSliderFill(el));
                 }, 500);
             }, 600); 
@@ -452,40 +410,84 @@
         function toggleMenu() { document.getElementById('menuOverlay').classList.toggle('active'); }
         function toggleLinkPopup() { document.getElementById('linkOverlay').classList.toggle('active'); }
 
+        // --- FIXED COPY FUNCTION ---
         function copyLinkUrl(btn) {
             const url = document.getElementById('linkText').innerText;
-            navigator.clipboard.writeText(url);
-            const originalText = btn.innerText;
-            btn.innerText = "✅ Copied!";
-            btn.style.background = "#fff"; btn.style.color = "#000";
-            setTimeout(() => { btn.innerText = originalText; btn.style.background = ""; btn.style.color = ""; }, 1500);
+            fallbackCopy(url, btn);
         }
 
-        // --- OPTIMIZED SLIDER SYNC & FILL EFFECT ---
+        function copyResult(btn) {
+            const txt = `🌱 Green Meter: ${document.getElementById('scoreVal').innerText} kg CO2\n🎯 Mission: ${window.currentMission}`;
+            fallbackCopy(txt, btn);
+        }
+
+        function fallbackCopy(text, btn) {
+            // Fallback for non-HTTPS contexts
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showCopyFeedback(btn)).catch(() => manualCopy(text, btn));
+            } else {
+                manualCopy(text, btn);
+            }
+        }
+
+        function manualCopy(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; // Avoid scrolling to bottom
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopyFeedback(btn);
+            } catch (err) {
+                alert('Copy failed. Please manually copy the text.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showCopyFeedback(btn) {
+            const iconSpan = btn.querySelector('.icon');
+            const originalHtml = btn.innerHTML;
+            
+            // Create Success State
+            if (iconSpan) {
+                btn.innerHTML = '<span class="icon" style="font-size:1.3em">✅</span> Copied!';
+            } else {
+                btn.innerText = "✅ Copied!";
+            }
+            
+            // Green Feedback
+            const originalBg = btn.style.background;
+            const originalColor = btn.style.color;
+            btn.style.background = 'var(--neon-green)';
+            btn.style.color = '#000';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.style.background = originalBg;
+                btn.style.color = originalColor;
+            }, 2000);
+        }
+
         let rafId = null;
         function optimizedSync(id, val) {
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(() => {
                 const num = document.getElementById(id);
                 num.value = val;
-                
-                // Update Slider Fill Visuals
                 const range = num.parentElement.querySelector('input[type="range"]');
                 updateSliderFill(range);
-
                 if(parseInt(val) > 9999) num.value = 9999;
             });
         }
 
-        // VISUAL: Update the green background fill of the slider
         function updateSliderFill(rangeInput) {
             if(!rangeInput) return;
             const val = rangeInput.value;
             const min = rangeInput.min ? rangeInput.min : 0;
             const max = rangeInput.max ? rangeInput.max : 100;
             const percentage = ((val - min) / (max - min)) * 100;
-            
-            // Dynamic Gradient: Green Fill vs Dark Track
             rangeInput.style.background = `linear-gradient(to right, #00ff9d 0%, #00ff9d ${percentage}%, rgba(255,255,255,0.05) ${percentage}%, rgba(255,255,255,0.05) 100%)`;
         }
 
@@ -495,7 +497,7 @@
             if(s) {
                 let val = parseInt(el.value) || 0;
                 s.value = Math.min(val, parseFloat(s.max));
-                updateSliderFill(s); // Update fill when typing number
+                updateSliderFill(s); 
             }
         }
         function validate(el) {
@@ -511,14 +513,59 @@
         
         function toggleSection(id) { document.getElementById(id).classList.toggle('open'); }
 
+        const successDB = [
+            "You are a Certified Eco-Legend! The planet loves you! 🌱✨",
+            "Clean & Green! Keep up this amazing streak! 🌍💚",
+            "Low carbon, high vibes! You're saving the future! 🚀",
+            "Nature smiles at you today! Perfect score! 🌿",
+            "Sustainability Champion! Show them how it's done! 🏆"
+        ];
+
         const missionDB = {
-            moto: ["🚶 Walk short trips (<1km).", "🚌 Take the bus twice."],
-            car: ["🚲 Cycle this weekend.", "🚗 Carpool with friends."],
-            ac: ["🌬️ Use fan-only tonight.", "🌡️ Set AC to 26°C."],
-            beef: ["🥦 Meat-free Monday.", "🐔 Switch beef for chicken."],
-            plastic: ["🥤 Bring a reusable bottle.", "👜 Say no to plastic bags."],
-            delivery: ["📦 Combine your orders.", "🍳 Cook a meal at home."]
+            moto: [
+                "🚶 Walk short trips (<1km) instead of riding.",
+                "🚌 Try the bus for just 2 days this week.",
+                "🏍️ Check your tire pressure to save fuel.",
+                "🛑 Turn off engine at red lights (>20s).",
+                "🗺️ Combine multiple errands into one trip."
+            ],
+            car: [
+                "🚲 Challenge: Cycle for errands this weekend.",
+                "🚗 Carpool with a colleague or friend.",
+                "🛑 Avoid idling your engine while waiting.",
+                "🦶 Drive smoothly: Avoid sudden acceleration.",
+                "🚌 Swap one car trip for public transport."
+            ],
+            ac: [
+                "🌬️ Challenge: Use fan-only for 2 nights.",
+                "🌡️ Set AC to 27°C (saves ~10% electricity).",
+                "🧹 Clean AC filters for better efficiency.",
+                "⏲️ Set a timer to turn off AC before waking up.",
+                "🪟 Open windows in the early morning instead."
+            ],
+            beef: [
+                "🥦 Go Meatless for 2 days this week.",
+                "🐔 Swap Beef for Chicken (80% less CO2).",
+                "🐟 Try a Fish or Veggie meal today.",
+                "📉 Reduce portion size of meat by half.",
+                "🥗 Explore a new Tofu or Bean recipe."
+            ],
+            plastic: [
+                "🥤 Bring your own reusable bottle everywhere.",
+                "👜 Refuse plastic bags: Carry a tote bag.",
+                "🥡 Say 'No Cutlery' on food delivery apps.",
+                "🍵 Use a real mug instead of plastic cups.",
+                "🎋 Switch to bamboo or metal straws."
+            ],
+            delivery: [
+                "📦 Wait & combine orders to save shipping.",
+                "🍳 Challenge: Cook 3 dinners at home.",
+                "🚶 Pick up the food yourself if close by.",
+                "🥗 Meal prep for the week to avoid ordering.",
+                "🛑 Delete one delivery app for a week."
+            ]
         };
+
         const factsDB = [
             "Tip: Unplugging electronics saves 10% energy.",
             "Did you know? Glass takes 4,000 years to decompose.",
@@ -555,36 +602,58 @@
             const mCard = document.getElementById('missionCard');
             let pct = Math.min((total / 30) * 100, 100);
             
-            fill.style.width = '0%';
+            // Force hard reset of class BEFORE timeout
             mCard.className = 'mission-card'; 
 
             setTimeout(() => {
-                fill.style.width = pct + '%';
+                // IMPORTANT: Reset class AGAIN inside timeout to be safe
+                mCard.className = 'mission-card'; 
+                
                 let color = "#00ff9d";
                 let emoji = "🌟"; let title = "WEEKLY MISSION";
 
-                if(total > 30 && total <= 50) {
-                    color = "#f59e0b"; emoji = "⚠️"; title = "MODERATE EXCESS";
-                    mCard.classList.add('level-warn');
-                } else if (total > 50) {
-                    color = "#ff0055"; emoji = "🚨"; title = "HIGH FOOTPRINT";
-                    mCard.classList.add('level-crit');
-                } else {
+                if(total <= 30) {
+                    color = "#00ff9d"; // GREEN
+                    emoji = "🌿"; 
+                    title = "PURE & CLEAN";
                     mCard.classList.add('level-safe');
-                    confetti.create(document.getElementById('confetti-canvas'), { resize: true })({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                    confetti.create(document.getElementById('confetti-canvas'), { resize: true })({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                } else if (total > 30 && total <= 50) {
+                    color = "#f59e0b"; // ORANGE
+                    emoji = "⚠️"; 
+                    title = "MODERATE EXCESS";
+                    mCard.classList.add('level-warn');
+                } else {
+                    color = "#ff0055"; // RED
+                    emoji = "🚨"; 
+                    title = "HIGH FOOTPRINT";
+                    mCard.classList.add('level-crit');
                 }
 
-                fill.style.background = color; fill.style.boxShadow = `0 0 30px ${color}`;
+                fill.style.width = pct + '%';
+                fill.style.background = color; 
+                fill.style.boxShadow = `0 0 30px ${color}`;
+                
                 document.getElementById('missionEmoji').innerText = emoji;
                 document.getElementById('missionTitle').innerText = title;
                 document.getElementById('missionTitle').style.color = color;
-            }, 100);
+            }, 50);
 
             animateValue('scoreVal', total);
 
             let maxKey = Object.keys(vals).reduce((a,b)=>vals[a]>vals[b]?a:b);
-            let msg = total <= 30 ? "You are a Climate Hero! Great job!" : 
-                      (vals[maxKey]===0 ? "Start tracking habits!" : missionDB[maxKey][Math.floor(Math.random()*missionDB[maxKey].length)]);
+            let msg = "";
+            
+            if (total <= 30) {
+                msg = successDB[Math.floor(Math.random() * successDB.length)];
+            } else {
+                 if (vals[maxKey] === 0) {
+                     msg = "Start tracking habits to save the planet!";
+                 } else {
+                     msg = missionDB[maxKey][Math.floor(Math.random() * missionDB[maxKey].length)];
+                 }
+            }
+
             document.getElementById('missionText').innerText = msg;
             window.currentMission = msg;
             document.getElementById('tipsText').innerText = factsDB[Math.floor(Math.random() * factsDB.length)];
@@ -599,13 +668,6 @@
                 if(prog < 1) requestAnimationFrame(step);
             }
             requestAnimationFrame(step);
-        }
-
-        function copyResult(btn) {
-            const txt = `🌱 Green Meter: ${document.getElementById('scoreVal').innerText} kg CO2\n🎯 Mission: ${window.currentMission}`;
-            navigator.clipboard.writeText(txt);
-            const icon = btn.querySelector('.icon'); const old = icon.innerText;
-            icon.innerText = "✅"; setTimeout(() => icon.innerText = old, 2000);
         }
 
         function resetApp() {
